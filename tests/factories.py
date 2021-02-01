@@ -1,6 +1,13 @@
 import factory
-from myapi.models import User
+from myapi.models import Task, User
 
+
+class TaskFactory(factory.Factory):
+
+    name = factory.Sequence(lambda n: "task%d" % n)
+
+    class Meta:
+        model = Task
 
 class UserFactory(factory.Factory):
 

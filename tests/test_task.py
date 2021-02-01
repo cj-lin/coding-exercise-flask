@@ -64,7 +64,7 @@ def test_delete_task(client, db, task, admin_headers):
 def test_create_task(client, db, admin_headers):
     # test bad data
     tasks_url = url_for('api.tasks')
-    data = {"taskname": "created"}
+    data = {}
     rep = client.post(tasks_url, json=data, headers=admin_headers)
     assert rep.status_code == 400
 

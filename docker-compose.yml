@@ -6,13 +6,13 @@ services:
     container_name: db-container
     image: mysql:5.7
     environment:
-      LANG: C.UTF-8
       MYSQL_ROOT_PASSWORD: 1qaz@WSX3edc
       MYSQL_DATABASE: myapi
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     volumes:
       - db_data:/var/lib/mysql
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci
     ports:
       - 3306:3306
 
@@ -36,7 +36,7 @@ services:
     env_file:
       - ./.flaskenv
     environment:
-      - DATABASE_URI=mysql+mysqldb://admin:admin@db/myapi
+      - DATABASE_URI=mysql+mysqldb://admin:admin@db/myapi?charset=utf8
     volumes:        
       - api_data:/docker_api
     depends_on:
