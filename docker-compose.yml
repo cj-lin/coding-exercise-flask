@@ -2,16 +2,45 @@
 version: '3'
 
 services:
+  db:
+    container_name: db-container
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: 1qaz@WSX3edc
+      MYSQL_DATABASE: myapi
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - 3306:3306
+
+  nginx:
+    container_name: nginx-container
+    image: nginx:1.19.5-alpine
+    volumes:
+      - api_data:/docker_api
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - 80:80
+    depends_on:
+      - web
+
   web:
-    image: myapi
+    container_name: web-container
+    image: web
     build: .
-    command: uwsgi --http 0.0.0.0:5000 --module myapi.wsgi:app
+    entrypoint: ["sh", "/code/entrypoint.sh"]
+    command: uwsgi --ini /code/uwsgi.ini
     env_file:
       - ./.flaskenv
     environment:
-      - DATABASE_URI=sqlite:////db/myapi.db
-    volumes:
-      - ./myapi:/code/myapi
-      - ./db/:/db/
-    ports:
-      - "5000:5000"
+      - DATABASE_URI=mysql+pymysql://admin:admin@db/myapi
+    volumes:        
+      - api_data:/docker_api
+    depends_on:
+      - db
+
+volumes:
+  db_data:
+  api_data:

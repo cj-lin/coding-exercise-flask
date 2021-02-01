@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:experimental
 # This is a simple Dockerfile to use while developing
 # It's not suitable for production
 #
@@ -11,12 +12,13 @@ FROM python:3.7
 RUN mkdir /code
 WORKDIR /code
 
-COPY requirements.txt setup.py tox.ini ./
-RUN pip install -U pip
-RUN pip install -r requirements.txt
-RUN pip install -e .
+RUN --mount=type=cache,target=/var/cache/apt \
+    apt-get update && \
+    apt-get install -y mariadb-client
 
-COPY myapi myapi/
-COPY migrations migrations/
-
-EXPOSE 5000
+COPY .my.cnf /root/.my.cnf
+COPY requirements.txt setup.py tox.ini uwsgi.ini entrypoint.sh myapi migrations ./
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip install -U pip && \
+    pip install -r requirements.txt && \
+    pip install -e .
