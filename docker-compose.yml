@@ -6,6 +6,7 @@ services:
     container_name: db-container
     image: mysql:5.7
     environment:
+      LANG: C.UTF-8
       MYSQL_ROOT_PASSWORD: 1qaz@WSX3edc
       MYSQL_DATABASE: myapi
       MYSQL_USER: admin
