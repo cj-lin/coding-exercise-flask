@@ -30,12 +30,12 @@ services:
     container_name: web-container
     image: web
     build: .
-    entrypoint: ["sh", "/code/entrypoint.sh"]
+    entrypoint: ["bash", "/code/entrypoint.sh"]
     command: uwsgi --ini /code/uwsgi.ini
     env_file:
       - ./.flaskenv
     environment:
-      - DATABASE_URI=mysql+pymysql://admin:admin@db/myapi
+      - DATABASE_URI=mysql+mysqldb://admin:admin@db/myapi
     volumes:        
       - api_data:/docker_api
     depends_on:

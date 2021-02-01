@@ -17,8 +17,11 @@ RUN --mount=type=cache,target=/var/cache/apt \
     apt-get install -y mariadb-client
 
 COPY .my.cnf /root/.my.cnf
-COPY requirements.txt setup.py tox.ini uwsgi.ini entrypoint.sh myapi migrations ./
+COPY requirements.txt setup.py tox.ini uwsgi.ini entrypoint.sh ./
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -U pip && \
     pip install -r requirements.txt && \
     pip install -e .
+
+COPY myapi myapi/
+COPY migrations migrations/
